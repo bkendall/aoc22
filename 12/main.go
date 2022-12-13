@@ -44,8 +44,7 @@ func (n *Node) Neighbors() []*Node {
 }
 
 func (n *Node) canGoTo(n2 *Node) bool {
-	// return n2.Val() <= n.Val()+1
-	return true
+	return n2.Val() <= n.Val()+1
 }
 
 func main() {
@@ -96,17 +95,6 @@ func main() {
 		yPtr = first
 	}
 
-	// ptr := start
-	// for ptr != nil {
-	// 	rPtr := ptr
-	// 	for rPtr != nil {
-	// 		fmt.Printf("%s", rPtr.c)
-	// 		rPtr = rPtr.right
-	// 	}
-	// 	fmt.Printf("\n")
-	// 	ptr = ptr.down
-	// }
-
 	// Part 1
 	path := AStar(start, end, func(n *Node) int { return 1 })
 	fmt.Printf("Path of length %d steps found!\n", len(path)-1)
@@ -122,9 +110,8 @@ func main() {
 		thisStart := aStart
 		go func() {
 			path := AStar(thisStart, end, func(n *Node) int { return 1 })
-			fmt.Printf("Starting from %q at %d, %d: %d\n", thisStart.c, thisStart.x, thisStart.y, len(path))
 			mu.Lock()
-			if len(path) < min {
+			if len(path) > 0 && len(path) < min {
 				min = len(path)
 			}
 			mu.Unlock()
@@ -188,7 +175,6 @@ func AStar(start, goal *Node, h func(n *Node) int) []*Node {
 		}
 	}
 
-	log.Fatalf("Failed to find path.")
 	return []*Node{}
 }
 
